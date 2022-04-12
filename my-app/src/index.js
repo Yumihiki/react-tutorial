@@ -78,6 +78,15 @@ class Board extends React.Component {
 
 // 実際のゲーム
 class Game extends React.Component {
+  constructor(prpos) {
+    super(props);
+    this.state = {
+      history: [{
+        squares: Array(9).fill(null),
+      }],
+      xIsNext: true,
+    }
+  }
   render() {
     return (
       <div className="game">
