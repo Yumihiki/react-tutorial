@@ -15,44 +15,16 @@ function Square(props) {
 
 // 盤面
 class Board extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      squares: Array(9).fill(null),
-      xIsNext: true,
-    };
-  }
-
-  handleClick(i) {
-    const squares = this.state.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
-      return;
-    }
-    squares[i] = this.state.xIsNext ? 'X' : '0';
-    this.setState({
-      squares: squares,
-      xIsNext: !this.state.xIsNext,
-    });
-  }
-
   renderSquare(i) {
     return (
       <Square
-        value={this.state.squares[i]}
-        onClick={() => this.handleClick(i)}
+        value={this.props.squares[i]}
+        onClick={() => this.props.onClick(i)}
       />
     );
   }
 
   render() {
-    const winner = calculateWinner(this.state.squares);
-    let status;
-    if (winner) {
-      status = 'Winner:' + winner;
-    } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'X' : '0');
-    }
-
     return (
       <div>
         <div className="status">{status}</div>
@@ -78,7 +50,7 @@ class Board extends React.Component {
 
 // 実際のゲーム
 class Game extends React.Component {
-  constructor(prpos) {
+  constructor(props) {
     super(props);
     this.state = {
       history: [{
@@ -87,7 +59,31 @@ class Game extends React.Component {
       xIsNext: true,
     }
   }
+  handleClick(i) {
+    const history = this.state.history;
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    squares[i] = this.state.xIsNext ? 'X' : '0';
+    this.setState({
+      history: history.concat([{
+        squares: squares,
+      }]),
+      xIsNext: !this.state.xIsNext,
+    });
+  }
   render() {
+    const history = this.state.history;
+    const current = history[history.length - 1];
+    const winner = calculateWinner(current.squares);
+    let status;
+    if (winner) {
+      status = 'Winner' + winner;
+    } else {
+      status = 'Next player: ' + (this.state.xIsNext ? 'X' : '0') ;
+    }
     return (
       <div className="game">
         <div className="game-board">
