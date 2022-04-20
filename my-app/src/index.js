@@ -10,7 +10,7 @@ function Square(props) {
     <button className="square" onClick={props.onClick}>
       {props.value}
     </button>
-  )
+  );
 }
 
 // 盤面
@@ -90,10 +90,10 @@ class Game extends React.Component {
 
     const moves = history.map((step, move) => {
       const desc = move ?
-      'Go to move #' + move :
-      'Go to game start';
+        'Go to move #' + move :
+        'Go to game start';
       return (
-        <li>
+        <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
@@ -107,7 +107,10 @@ class Game extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
-          <Board />
+          <Board 
+            squares={current.squares}
+            onClick={i => this.handleClick(i)}
+          />
         </div>
         <div className="game-info">
           <div>{status}</div>
